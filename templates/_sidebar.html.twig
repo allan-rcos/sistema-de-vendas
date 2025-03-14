@@ -1,0 +1,23 @@
+{% set iconSize = "24" %}
+{% set currentPath = path(app.request.attributes.get('_route')) %}
+{% set list = [[path('TipoProduto'), 'svg/grid.svg.twig', 'Tipo Produto'],
+    ['', 'svg/pizza.svg.twig', 'Produto'],
+    ['', 'svg/basket.svg.twig', 'Pedidos']] %}
+<aside id="logo-sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0" aria-label="Barra Lateral">
+    <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
+        <ul class="space-y-2 font-medium">
+            <li>
+                {% set itemPath, itemSVGFileName, itemName
+                    = path('Home'), 'svg/home.svg.twig', 'Dashboard' %}
+                    {% include('_sidebarItem.html.twig') %}
+            </li>
+        </ul>
+        <ul class="pt-4 mt-4 space-y-2 font-medium border-t border-gray-200 dark:border-gray-700">
+            {% for item in list %}
+                {% set itemPath, itemSVGFileName, itemName
+                    = item[0], item[1], item[2]%}
+                {% include('_sidebarItem.html.twig') %}
+            {% endfor %}
+        </ul>
+    </div>
+</aside>

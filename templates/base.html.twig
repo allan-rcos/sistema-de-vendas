@@ -3,14 +3,21 @@
     <head>
         <meta charset="UTF-8">
         <title>{% block title %}Sistema de Vendas{% endblock %}</title>
-        <link rel="icon" type="image/svg" href="{{ absolute_url('favicon.svg') }}" />
+        <link rel="icon" type="image/svg" href="{{ absolute_url(asset('favicon.svg')) }}" />
         {% block stylesheets %}
         {% endblock %}
 
         {% block javascripts %}
+            {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+        {{ include('_navbar.html.twig') }}
+        {{ include('_sidebar.html.twig') }}
+        <div class="p-4 sm:ml-64">
+            <div class="p-4 rounded-lg mt-16">
+                {% block body %}{% endblock %}
+            </div>
+        </div>
     </body>
 </html>

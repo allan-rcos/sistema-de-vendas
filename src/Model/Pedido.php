@@ -2,7 +2,8 @@
 
 namespace App\Model;
 
-use \DateTime;
+use App\Enum\FormasPagamento;
+use DateTime;
 
 class Pedido
 {
