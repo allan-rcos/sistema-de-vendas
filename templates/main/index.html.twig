@@ -1,0 +1,17 @@
+{% extends "base.html.twig" %}
+
+{% block title app.session.get('currentButton').name %}
+
+{% block body %}
+
+    {% import 'macros/_table.html.twig' as tableMacro %}
+    {% import 'macros/_modal.html.twig' as modalMacro %}
+    {% set currentButton = app.session.get('currentButton') %}
+
+
+    {% if dataForm %}
+        {{ modalMacro.createModal(app.request.attributes.get("_controller"), currentButton.pathName, currentButton.name, dataForm) }}
+    {% endif %}
+
+    {{ tableMacro.createTable(enum(currentButton.enum), page, currentButton.pathName) }}
+{% endblock %}

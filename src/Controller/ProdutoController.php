@@ -1,86 +1,87 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Controller;
 
-use App\Entity\TipoProduto;
+use App\Entity\Produto;
+use App\Enum\ProdutoHeaders;
 use App\Form\ConfirmExclusionForm;
-use App\Form\TipoProdutoForm;
-use App\Repository\TipoProdutoRepository;
+use App\Form\ProdutoForm;
+use App\Repository\ProdutoRepository;
 use App\Traits\ControllerTrait;
 use Doctrine\ORM\EntityManagerInterface;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
+use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\Response;
 
-#[Route('/tipo-produto')]
-class TipoProdutoController extends AbstractController
+#[Route(path: '/produto')]
+class ProdutoController extends AbstractController
 {
     use ControllerTrait;
 
-    protected string $NAME = "tipos-produto";
-    #[Route('/', name: 'TipoProduto')]
-    public function index(TipoProdutoRepository $repository,
+    protected string $NAME = "produtos";
+    #[Route(path: '/', name: 'Produto')]
+    public function index(ProdutoRepository $repository,
                           #[MapQueryParameter] int $page = 1,
                           #[MapQueryParameter(options: ['min_range' => 1, 'max_range' => 10])] int $limit = 10): Response
     {
         return $this->renderWithSideBarItems('main/index.html.twig', $this->createPagination($repository, $page, $limit));
     }
 
-    #[Route(path: '/new', name: 'AddTipoProduto')]
-    public function createAction(TipoProdutoRepository $repository,
+    #[Route(path: '/new', name: 'AddProduto')]
+    public function createAction(ProdutoRepository $repository,
                                  Request $request,
                                  EntityManagerInterface $em,
                                  #[MapQueryParameter] int $page = 1,
                                  #[MapQueryParameter(options: ['min_range' => 1, 'max_range' => 10])] int $limit = 10): RedirectResponse|Response
     {
-        $form = $this->createForm(TipoProdutoForm::class);
+        $form = $this->createForm(ProdutoForm::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em->persist($form->getData());
             $em->flush();
 
-            $this->addFlash('success', 'Tipo Produto criado.');
+            $this->addFlash('success', 'Produto criado.');
 
-            return $this->redirectToRoute('TipoProduto', [$page, $limit]);
+            return $this->redirectToRoute('Produto', [$page, $limit]);
         }
 
         return $this->renderWithSideBarItems('main/index.html.twig', $this->createPagination($repository, $page, $limit), $form);
     }
 
-    #[Route(path: '/edit/{id<\d+>}', name: 'EditTipoProduto')]
+    #[Route(path: '/edit/{id<\d+>}', name: 'EditProduto')]
     public function editAction(
-        TipoProduto $tipoProduto,
-        TipoProdutoRepository $repository,
+        Produto $produto,
+        ProdutoRepository $repository,
         Request $request,
         EntityManagerInterface $em,
         #[MapQueryParameter] int $page = 1,
         #[MapQueryParameter(options: ['min_range' => 1, 'max_range' => 10])] int $limit = 10): RedirectResponse|Response
     {
-        $form = $this->createForm(TipoProdutoForm::class, $tipoProduto);
+        $form = $this->createForm(ProdutoForm::class, $produto);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em->persist($tipoProduto);
+            $em->persist($produto);
             $em->flush();
 
-            $this->addFlash('success', 'Tipo Produto salvo.');
+            $this->addFlash('success', 'Produto salvo.');
 
-            return $this->redirectToRoute('TipoProduto', [$page, $limit]);
+            return $this->redirectToRoute('Produto', [$page, $limit]);
         }
 
         return $this->renderWithSideBarItems('main/index.html.twig', $this->createPagination($repository, $page, $limit), $form);
     }
 
-    #[Route(path: '/confirm-exclusion/{id<\d+>}', name: 'RemoveTipoProduto')]
+    #[Route(path: '/confirm-exclusion/{id<\d+>}', name: 'RemoveProduto')]
     public function removeAction(
-        TipoProduto $tipoProduto,
-        TipoProdutoRepository $repository,
+        Produto $produto,
+        ProdutoRepository $repository,
         Request $request,
         EntityManagerInterface $em,
         #[MapQueryParameter] int $page = 1,
@@ -90,12 +91,12 @@ class TipoProdutoController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em->remove($tipoProduto);
+            $em->remove($produto);
             $em->flush();
 
-            $this->addFlash('success', 'Tipo Produto removido.');
+            $this->addFlash('success', 'Produto removido.');
 
-            return $this->redirectToRoute('TipoProduto', [$page, $limit]);
+            return $this->redirectToRoute('Produto', [$page, $limit]);
         }
 
         return $this->renderWithSideBarItems('main/index.html.twig', $this->createPagination($repository, $page, $limit), $form);

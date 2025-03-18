@@ -3,12 +3,14 @@
 namespace App\Entity;
 
 use App\Enum\FormasPagamento;
+use App\Enum\PedidoHeaders;
 use App\Repository\PedidoRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation\Timestampable;
+use phpDocumentor\Reflection\Types\This;
 
 #[ORM\Entity(repositoryClass: PedidoRepository::class)]
 class Pedido
@@ -96,5 +98,23 @@ class Pedido
         $this->createdAt = $createdAt;
 
         return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getHeaders(): array
+    {
+        return array_column(PedidoHeaders::cases(), 'value');
+    }
+
+    public function getWithHeader(PedidoHeaders $header): string
+    {
+        return match ($header) {
+            PedidoHeaders::ID => number_format($this->getId(), 0, ",", "."),
+            PedidoHeaders::TOTAL => number_format($this->getTotal(), 2, ",", "."),
+            PedidoHeaders::FORMA_DE_PAGAMENTO => $this->getFormaDePagamento()->value,
+            PedidoHeaders::CREATED_AT => $this->getCreatedAt()->format("d/m/Y H:i")
+        };
     }
 }

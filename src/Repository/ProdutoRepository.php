@@ -4,16 +4,23 @@ namespace App\Repository;
 
 use App\Entity\Produto;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<Produto>
  */
-class ProdutoRepository extends ServiceEntityRepository
+class ProdutoRepository extends ServiceEntityRepository implements RepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Produto::class);
+    }
+
+    public function createFindAllQueryBuilder(): QueryBuilder
+    {
+        return $this->createQueryBuilder("produto")
+            ->select("produto");
     }
 
     //    /**

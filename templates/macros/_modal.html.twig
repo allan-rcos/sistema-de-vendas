@@ -1,0 +1,54 @@
+{% macro createModal(controller, controllerName, pageTitle, dataForm) %}
+    <div tabindex="-1" class="bg-black bg-opacity-30 flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative p-4 w-full max-w-md max-h-full">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow-sm">
+                <!-- Modal header -->
+                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900">
+                        {% if "create" in controller %}
+                            Adicionar {{ pageTitle }}
+                            {% set buttonColor = "blue" %}
+                        {% elseif "edit" in controller %}
+                            Editar {{ pageTitle }}
+                            {% set buttonColor = "blue" %}
+                        {% elseif "remove" in controller %}
+                            Excluir {{ pageTitle }}
+                            {% set buttonColor = "red" %}
+                        {% endif %}
+                    </h3>
+                    <a class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                       href="{{ path(controllerName, app.request.query.all) }}">
+                        {% include 'svg/close.svg.twig' %}
+                        <span class="sr-only">Close modal</span>
+                    </a>
+                </div>
+                <!-- Modal body -->
+                {{ form_start(dataForm) }}
+                <div class="p-4 md:p-5">
+                    <div class="grid gap-4 mb-4">
+                        {{ form_widget(dataForm) }}
+                    </div>
+                    {% if false %}
+                        <button type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                        </button>
+                        <button type="submit" class="h-5 w-5 text-white inline-flex items-center bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                        </button>
+                    {% endif %}
+                    <button type="submit" class="text-white inline-flex items-center bg-{{ buttonColor }}-700 hover:bg-{{ buttonColor }}-800 focus:ring-4 focus:outline-none focus:ring-{{ buttonColor }}-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                        {% if "create" in controller %}
+                            {% include 'svg/add.svg.twig' %}
+                            Adicionar
+                        {% elseif "edit" in controller %}
+                            {% include 'svg/pencil.svg.twig' %}
+                            Editar
+                        {% elseif "remove" in controller %}
+                            Confirmar
+                        {% endif %}
+                    </button>
+                </div>
+                {{ form_end(dataForm) }}
+            </div>
+        </div>
+    </div>
+{% endmacro %}

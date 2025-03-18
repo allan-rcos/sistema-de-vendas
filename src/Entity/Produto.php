@@ -2,10 +2,14 @@
 
 namespace App\Entity;
 
+use App\Enum\ProdutoHeaders;
 use App\Repository\ProdutoRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Positive;
+use Symfony\Component\Validator\Constraints\Regex;
 
 #[ORM\Entity(repositoryClass: ProdutoRepository::class)]
 class Produto
@@ -16,10 +20,15 @@ class Produto
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[NotBlank(message: "A Descrição é obrigatória")]
+    #[Regex(pattern: "/^[A-zÀ-ú ]+$/",
+        message: "A descrição não pode conter caracteres não alfabéticos.")]
     private ?string $description = null;
 
     #[ORM\Column]
-    private ?float $value = null;
+    #[NotBlank(message: "O valor é obrigatório.")]
+    #[Positive(message: "O valor precisa ser maior do que 0.")]
+    private ?float $value = 0;
 
     #[ORM\ManyToOne(inversedBy: 'produtos')]
     #[ORM\JoinColumn(nullable: false)]
@@ -102,5 +111,29 @@ class Produto
         }
 
         return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getHeaders(): array
+    {
+        return array_column(ProdutoHeaders::cases(), 'value');
+    }
+
+    public function getWithHeader(ProdutoHeaders $header): string
+    {
+        return match ($header) {
+            ProdutoHeaders::ID => number_format($this->getId(), 0, ",", "."),
+            ProdutoHeaders::VALUE => number_format($this->getValue(), 2, ",", "."),
+            ProdutoHeaders::DESCRIPTION => $this->getDescription()
+        };
+    }
+
+    public function __toString(): string
+    {
+        $description = $this->getDescription();
+        $value = $this.$this->getWithHeader(ProdutoHeaders::VALUE);
+        return "$description (R$$value)";
     }
 }

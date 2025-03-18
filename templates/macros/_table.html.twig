@@ -1,0 +1,91 @@
+{% macro createTable(headers, page, pathName="#") %}
+    {% set currentParams = app.request.query.all %}
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <div class="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white">
+            <a class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none"
+                href="{{ path('Add' ~ pathName, currentParams) }}">
+                {% include 'svg/add.svg.twig' %}
+                Adicionar novo
+            </a>
+            <label for="table-search" class="sr-only">Search</label>
+            <div class="relative">
+                <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none text-gray-500">
+                    {% include 'svg/search.svg.twig' %}
+                </div>
+                {# TODO: Add search system #}
+                <input type="text" id="table-search" class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search for users">
+            </div>
+        </div>
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                <tr>
+                    {% for header in headers.cases %}
+                        <th scope="col" class="px-6 py-3">
+                            {{ header.value }}
+                        </th>
+                    {% endfor %}
+                    <th scope="col" class="px-6 py-3">
+                        Ação
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+
+            {% for value in page %}
+
+                <tr class="bg-white border-b border-gray-200 hover:bg-gray-50">
+                    {% for header in headers.cases %}
+                        {% if loop.first %}
+                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                {{ value.withHeader(header) }}
+                            </th>
+                        {% else %}
+                            <td class="px-6 py-4">
+                                {{ value.withHeader(header) }}
+                            </td>
+                        {% endif %}
+                    {% endfor %}
+                    <td class="flex items-center px-6 py-4">
+                        <a href="{{ path("Edit" ~ pathName, currentParams|merge({id: value.id})) }}" class="font-medium text-blue-600 hover:underline">Editar</a>
+                        <a href="{{ path("Remove" ~ pathName, currentParams|merge({id: value.id})) }}" class="font-medium text-red-600 hover:underline ms-3">Remover</a>
+                    </td>
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+        </table>
+        {% if page.haveToPaginate %}
+            <nav class="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4" aria-label="Navegação">
+                <span class="text-sm font-normal text-gray-500 mb-4 md:mb-0 block w-full md:inline md:w-auto">Showing <span class="font-semibold text-gray-900">1-{{ page.maxPerPage }}</span></span>
+                <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+                    {% if page.hasPreviousPage %}
+                        <li>
+                            <a href="{{ path(pathName, currentParams|merge({page: page.getPreviousPage})) }}" class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700">Anterior</a>
+                        </li>
+                    {% endif %}
+
+                    {% for pageNumber in range(1, page.nbPages) %}
+                        {% if pageNumber == page.currentPage %}
+                            <li>
+                                <a href="{{ path(pathName, currentParams|merge({page: pageNumber})) }}" aria-current="page" class="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700">{{ pageNumber }}</a>
+                            </li>
+                        {% else %}
+                            <li>
+                                <a href="{{ path(pathName, currentParams|merge({page: pageNumber})) }}" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">{{ pageNumber }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page.hasNextPage %}
+                        <li>
+                            <a href="{{ path(pathName, currentParams|merge({page: page.getNextPage})) }}" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700">Próximo</a>
+                        </li>
+                    {% endif %}
+
+                </ul>
+            </nav>
+        {% endif %}
+
+    </div>
+{% endmacro %}

@@ -23,7 +23,7 @@ final class TipoProdutoFactory extends PersistentProxyObjectFactory
         "Smartwatch",
         "Câmera digital",
         "Impressora",
-        "Roteador Wi-Fi",
+        "Roteadores",
         "Console de videogame",
         "Televisão",
         "Livro",

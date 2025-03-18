@@ -2,12 +2,19 @@
 
 namespace App\Entity;
 
+use App\Enum\TipoProdutoHeaders;
 use App\Repository\TipoProdutoRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TipoProdutoRepository::class)]
+#[UniqueEntity(
+    fields: ["description"],
+    message: "Esse tipo de produto já existe."
+)]
 class TipoProduto
 {
     #[ORM\Id]
@@ -16,6 +23,9 @@ class TipoProduto
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: "A Descrição é obrigatória")]
+    #[Assert\Regex(pattern: "/^[A-zÀ-ú ]+$/",
+        message: "A descrição não pode conter caracteres não alfabéticos.")]
     private ?string $description = null;
 
     /**
@@ -74,5 +84,26 @@ class TipoProduto
         }
 
         return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getHeaders(): array
+    {
+        return array_column(TipoProdutoHeaders::cases(), 'value');
+    }
+
+    public function getWithHeader(TipoProdutoHeaders $header): string
+    {
+        return match ($header) {
+            TipoProdutoHeaders::ID => number_format($this->getId(), 0, ",", "."),
+            TipoProdutoHeaders::DESCRIPTION => $this->getDescription(),
+        };
+    }
+
+    public function __toString(): string
+    {
+        return $this->getDescription();
     }
 }
