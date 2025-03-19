@@ -8,6 +8,7 @@ use App\Form\ConfirmExclusionForm;
 use App\Form\PedidoForm;
 use App\Repository\PedidoRepository;
 use App\Traits\ControllerTrait;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
@@ -28,7 +29,7 @@ class PedidoController extends AbstractController
     #[Route(path: '/', name: 'Pedido')]
     public function index(PedidoRepository $repository,
                           #[MapQueryParameter] int $page = 1,
-                          #[MapQueryParameter(options: ['min_range' => 1, 'max_range' => 10])] int $limit = 10): Response
+                          #[MapQueryParameter(options: ['min_range' => 1, 'max_range' => 10])] int $limit = 5): Response
     {
         return $this->renderWithSideBarItems('main/index.html.twig', $this->createPagination($repository, $page, $limit));
     }
@@ -38,7 +39,7 @@ class PedidoController extends AbstractController
                                  Request $request,
                                  EntityManagerInterface $em,
                                  #[MapQueryParameter] int $page = 1,
-                                 #[MapQueryParameter(options: ['min_range' => 1, 'max_range' => 10])] int $limit = 10): RedirectResponse|Response
+                                 #[MapQueryParameter(options: ['min_range' => 1, 'max_range' => 5])] int $limit = 10): RedirectResponse|Response
     {
         $form = $this->createForm(PedidoForm::class);
         $form->handleRequest($request);
@@ -62,12 +63,25 @@ class PedidoController extends AbstractController
         Request $request,
         EntityManagerInterface $em,
         #[MapQueryParameter] int $page = 1,
-        #[MapQueryParameter(options: ['min_range' => 1, 'max_range' => 10])] int $limit = 10): RedirectResponse|Response
+        #[MapQueryParameter(options: ['min_range' => 1, 'max_range' => 10])] int $limit = 5): RedirectResponse|Response
     {
+        $original = new ArrayCollection();
+        foreach ($pedido->getProdutos() as $produto) {
+            $original->add($produto);
+            unset($produto);
+        }
+
         $form = $this->createForm(PedidoForm::class, $pedido);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $produtos = $pedido->getProdutos();
+            foreach ($original as $produto) {
+                if (!$produtos->contains($produto))
+                    $em->remove($produto);
+                unset($produto);
+            }
+
             $em->persist($pedido);
             $em->flush();
 
@@ -86,7 +100,7 @@ class PedidoController extends AbstractController
         Request $request,
         EntityManagerInterface $em,
         #[MapQueryParameter] int $page = 1,
-        #[MapQueryParameter(options: ['min_range' => 1, 'max_range' => 10])] int $limit = 10): RedirectResponse|Response
+        #[MapQueryParameter(options: ['min_range' => 1, 'max_range' => 10])] int $limit = 5): RedirectResponse|Response
     {
         $form = $this->createForm(ConfirmExclusionForm::class);
         $form->handleRequest($request);

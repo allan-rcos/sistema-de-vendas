@@ -27,7 +27,7 @@ class ProdutoController extends AbstractController
     #[Route(path: '/', name: 'Produto')]
     public function index(ProdutoRepository $repository,
                           #[MapQueryParameter] int $page = 1,
-                          #[MapQueryParameter(options: ['min_range' => 1, 'max_range' => 10])] int $limit = 10): Response
+                          #[MapQueryParameter(options: ['min_range' => 1, 'max_range' => 10])] int $limit = 5): Response
     {
         return $this->renderWithSideBarItems('main/index.html.twig', $this->createPagination($repository, $page, $limit));
     }
@@ -37,7 +37,7 @@ class ProdutoController extends AbstractController
                                  Request $request,
                                  EntityManagerInterface $em,
                                  #[MapQueryParameter] int $page = 1,
-                                 #[MapQueryParameter(options: ['min_range' => 1, 'max_range' => 10])] int $limit = 10): RedirectResponse|Response
+                                 #[MapQueryParameter(options: ['min_range' => 1, 'max_range' => 10])] int $limit = 5): RedirectResponse|Response
     {
         $form = $this->createForm(ProdutoForm::class);
         $form->handleRequest($request);
@@ -61,7 +61,7 @@ class ProdutoController extends AbstractController
         Request $request,
         EntityManagerInterface $em,
         #[MapQueryParameter] int $page = 1,
-        #[MapQueryParameter(options: ['min_range' => 1, 'max_range' => 10])] int $limit = 10): RedirectResponse|Response
+        #[MapQueryParameter(options: ['min_range' => 1, 'max_range' => 10])] int $limit = 5): RedirectResponse|Response
     {
         $form = $this->createForm(ProdutoForm::class, $produto);
         $form->handleRequest($request);
@@ -85,7 +85,7 @@ class ProdutoController extends AbstractController
         Request $request,
         EntityManagerInterface $em,
         #[MapQueryParameter] int $page = 1,
-        #[MapQueryParameter(options: ['min_range' => 1, 'max_range' => 10])] int $limit = 10): RedirectResponse|Response
+        #[MapQueryParameter(options: ['min_range' => 1, 'max_range' => 10])] int $limit = 5): RedirectResponse|Response
     {
         $form = $this->createForm(ConfirmExclusionForm::class);
         $form->handleRequest($request);

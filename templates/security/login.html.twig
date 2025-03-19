@@ -1,0 +1,31 @@
+{% extends 'security/base.html.twig' %}
+
+{% block title "Login" %}
+
+{% block body %}
+    <section class="bg-gray-50">
+        <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+            <a href="#" class="flex items-center mb-6 text-2xl font-semibold text-gray-900">
+                {% include 'svg/favicon.svg.twig' %}
+                Sistema de Vendas
+            </a>
+            <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0">
+                <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+                    <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
+                        Entre na sua conta:
+                    </h1>
+                    {{ form_start(login_form) }}
+                        <div class="space-y-4 md:space-y-6">
+                            {{ form_widget(login_form) }}
+                            <button type="submit" style="margin-top: 0" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 w-full focus:outline-none">Entrar</button>
+                            <p class="text-xs font-light text-gray-500">
+                                Caso não tenha uma conta, favor informar ao administrador do sistema.
+                            </p>
+                        </div>
+                    {{ form_end(login_form) }}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+

@@ -23,7 +23,7 @@ class Pedido
     /**
      * @var Collection<int, Produto>
      */
-    #[ORM\ManyToMany(targetEntity: Produto::class, inversedBy: 'pedidos')]
+    #[ORM\ManyToMany(targetEntity: Produto::class, inversedBy: 'pedidos', cascade: ["detach"])]
     private Collection $produtos;
 
     #[ORM\Column]
@@ -64,9 +64,12 @@ class Pedido
         return $this;
     }
 
-    public function removeProduto(Produto $produto): static
+    public function removeProduto(Produto $produto, bool $change_total = false): static
     {
         $this->produtos->removeElement($produto);
+
+        if ($change_total)
+            $this->total -= $produto->getValue();
 
         return $this;
     }

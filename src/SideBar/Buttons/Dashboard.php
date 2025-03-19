@@ -27,4 +27,9 @@ final class Dashboard extends AbstractSideBarButton
     {
         return "svg/home.svg.twig";
     }
+
+    public function getControllerName(): string
+    {
+        return "\MainController";
+    }
 }

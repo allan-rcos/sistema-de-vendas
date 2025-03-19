@@ -5,6 +5,7 @@ namespace App\DataFixtures;
 use App\Factory\PedidoFactory;
 use App\Factory\ProdutoFactory;
 use App\Factory\TipoProdutoFactory;
+use App\Factory\UserFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -23,6 +24,12 @@ class AppFixtures extends Fixture
         PedidoFactory::createOne([
             "produtos" => ProdutoFactory::randomRange(1, 5)
         ]);
+        UserFactory::createOne([
+            "email" => "admin@localhost.dev",
+            "name" => "Administrador do Sistema",
+            "roles" => ["ROLE_ADMIN"]
+        ]);
+        UserFactory::createMany(4);
 
         $manager->flush();
     }

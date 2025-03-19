@@ -2,7 +2,9 @@
 framework:
     form:
         csrf_protection:
-            token_id: submit
+            token_id: Enviar
+            enabled: true
+            field_name: '_csrf_token'
 
     csrf_protection:
         stateless_token_ids:

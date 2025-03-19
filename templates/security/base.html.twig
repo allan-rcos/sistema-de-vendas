@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %} Sistema de Vendas {% endblock %}</title>
+    <link rel="icon" type="image/svg" href="{{ absolute_url(asset('favicon.svg')) }}" />
+    {% block stylesheets %}
+    {% endblock %}
+
+    {% block javascripts %}
+        {% block importmap %}{{ importmap('app') }}{% endblock %}
+    {% endblock %}
+</head>
+    <body>
+        {% include '_flash.html.twig' %}
+        <main class="w-full h-full bg-gray-200">
+            {% block body %}{% endblock %}
+        </main>
+    </body>
+</html>

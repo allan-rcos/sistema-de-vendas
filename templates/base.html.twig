@@ -17,13 +17,8 @@
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
-    <body>
-        {% for message in app.flashes('success') %}
-            <div class="flex items-center w-full max-w-xs p-4 space-x-4 rtl:space-x-reverse text-gray-500 bg-white divide-x rtl:divide-x-reverse divide-gray-200 rounded-lg shadow-sm top-{{ (loop.index0 * 20) + 25 }} right-5" role="alert">
-                {% include 'svg/checkmark-circle.svg.twig' %}
-                <div class="ps-4 text-sm font-normal">{{ message }}</div>
-            </div>
-        {% endfor %}
+    <body class="bg-white antialiased relative">
+        {{ include('_flash.html.twig') }}
         {{ include('_navbar.html.twig') }}
         {{ include('_sidebar.html.twig') }}
         <div class="p-4 sm:ml-64">
