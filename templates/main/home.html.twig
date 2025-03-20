@@ -3,5 +3,37 @@
 {% block title 'Bem vindo!' %}
 
 {% block body %}
-    <p>Página central do <span style="font-weight: bolder;">Sistema de Vendas</span>.</p>
+    {% set fdp_enum = enum(fdp_enum_name) %}
+    <h3 class="text-3xl font-bold">Dashboard - Sistema de Vendas</h3>
+
+    <div class="columns-3 mt-5">
+        <div class="flex flex-col items-stretch bg-white border border-gray-200 rounded-lg shadow-sm md:flex-row md:max-w-xl">
+            <div class="bg-yellow-500 w-full rounded-t-lg h-full md:h-auto md:w-48 md:rounded-none md:rounded-s-lg flex items-center justify-center">
+                {% include 'svg/card.svg.twig' %}
+            </div>
+            <div class="flex flex-col justify-between p-4 leading-normal">
+                <h5 class="mb-2 text-2xl font-normal tracking-tight text-gray-900">Pag no Crédito</h5>
+                <p class="mb-3 font-bolder text-gray-700">R${{ described_pedidos[fdp_enum.CREDITO.name]["sum"]|default(0)|number_format(2, ',', '.') }}</p>
+            </div>
+        </div>
+        <div class="flex flex-col items-stretch bg-white border border-gray-200 rounded-lg shadow-sm md:flex-row md:max-w-xl">
+            <div class="bg-cyan-500 w-full rounded-t-lg h-full md:h-auto md:w-48 md:rounded-none md:rounded-s-lg flex items-center justify-center">
+                {% include 'svg/card.svg.twig' %}
+            </div>
+            <div class="flex flex-col justify-between p-4 leading-normal">
+                <h5 class="mb-2 text-2xl font-normal tracking-tight text-gray-900">Pag no Débito</h5>
+                <p class="mb-3 font-bolder text-gray-700">R${{ described_pedidos[fdp_enum.DEBITO.name]["sum"]|default(0)|number_format(2, ',', '.') }}</p>
+            </div>
+        </div>
+        <div class="flex flex-col items-stretch bg-white border border-gray-200 rounded-lg shadow-sm md:flex-row md:max-w-xl">
+            <div class="bg-green-500 w-full rounded-t-lg h-full md:h-auto md:w-48 md:rounded-none md:rounded-s-lg flex items-center justify-center">
+                {% include 'svg/cash.svg.twig' %}
+            </div>
+            <div class="flex flex-col justify-between p-4 leading-normal">
+                <h5 class="mb-2 text-2xl font-normal tracking-tight text-gray-900">Pag no Dinheiro</h5>
+                <p class="mb-3 font-bolder text-gray-700">R${{ described_pedidos[fdp_enum.DINHEIRO.name]["sum"]|default(0)|number_format(2, ',', '.') }}</p>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}

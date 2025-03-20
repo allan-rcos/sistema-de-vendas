@@ -58,7 +58,7 @@ class Pedido
     {
         if (!$this->produtos->contains($produto)) {
             $this->produtos->add($produto);
-            $this->total += $produto->getValue();
+            $this->total = round($this->total + $produto->getValue(), 2);
         }
 
         return $this;
@@ -69,7 +69,7 @@ class Pedido
         $this->produtos->removeElement($produto);
 
         if ($change_total)
-            $this->total -= $produto->getValue();
+            $this->total = round($this->total - $produto->getValue(), 2);
 
         return $this;
     }

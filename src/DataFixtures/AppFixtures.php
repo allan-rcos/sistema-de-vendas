@@ -21,9 +21,11 @@ class AppFixtures extends Fixture
         ProdutoFactory::createMany(10, function () use ($tipos_produto) {
             return ['tipo_produto' => $tipos_produto[array_rand($tipos_produto)]];
         });
-        PedidoFactory::createOne([
+        PedidoFactory::createMany(5, function () {
+            return [
             "produtos" => ProdutoFactory::randomRange(1, 5)
-        ]);
+            ];
+        });
         UserFactory::createOne([
             "email" => "admin@localhost.dev",
             "name" => "Administrador do Sistema",

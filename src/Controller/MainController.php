@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Enum\FormasPagamento;
+use App\Repository\PedidoRepository;
 use App\Traits\ControllerTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,8 +16,13 @@ class MainController extends AbstractController
     protected string $NAME = 'home';
 
     #[Route(path: '/', name: 'Home')]
-    public function homeAction(): Response
+    public function homeAction(PedidoRepository $repository): Response
     {
-        return $this->renderWithSideBarItems('main/home.html.twig');
+        $describe = $repository->describeByFormaDePagamento();
+
+        return $this->renderWithSideBarItems('main/home.html.twig', parameters:[
+            "described_pedidos" => $describe,
+            "fdp_enum_name" => FormasPagamento::class
+        ]);
     }
 }

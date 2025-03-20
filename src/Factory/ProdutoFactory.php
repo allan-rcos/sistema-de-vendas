@@ -56,7 +56,7 @@ final class ProdutoFactory extends PersistentProxyObjectFactory
         return [
             'description' => self::faker()->randomElement(self::DESCRIPTIONS),
             'tipo_produto' => TipoProdutoFactory::new(),
-            'value' => self::faker()->randomFloat(2, max:10000),
+            'value' => self::faker()->randomFloat(2, max:100),
         ];
     }
 
